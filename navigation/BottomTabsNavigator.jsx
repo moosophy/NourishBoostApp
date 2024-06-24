@@ -9,6 +9,8 @@ import WeightScreen from "../screens/WeightScreen";
 import UtensilsIcon from "../components/icons/UtensilsIcon";
 import ScaleIcon from "../components/icons/ScaleIcon";
 import MealsStackNavigator from "./MealsStackNavigator";
+import WeightStackNavigator from "./WeightStackNavigator";
+
 
 // Initializing navigator
 const Tab = createBottomTabNavigator();
@@ -35,7 +37,7 @@ export default function BottomTabsNavigator() {
       />
       <Tab.Screen
         name="Weight"
-        component={WeightScreen}
+        component={WeightStackNavigator}
         options={{
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
