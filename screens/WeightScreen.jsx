@@ -7,28 +7,22 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 //Components
 import CalendarDayIcon from "../components/icons/CalendarDayIcon";
 import tweakStyles from "../functions/tweakStyles";
-import getAllUnits from "../queries/getAllUnits";
-import RulerVerticalIcon from "../components/icons/RulerVerticalIcon";
-import GaugeIcon from "../components/icons/GaugeIcon";
-import PlusIcon from "../components/icons/PlusIcon";
 
 
-/* Katya - 
-  I reused the same code for the calendar,
-  maybe we could make it so that by changing the date on one screen, it
-  will also use this date when you go to another screen? just a suggestion
 
-*/
-
-  // Retrieving the device's dimensions
-const screenWidth = Dimensions.get("window").width;
+  const screenWidth = Dimensions.get("window").width;
 
 
 export default function WeightScreen() {
 
   const [weightMeasure, setWeightMeasure] = useState(0);
   const [measureValidity, setMeasureValidity] = useState(false);
+  const [showMeasureAlert, setShowMeasureAlert] = useState(false);
   const [startValidating, setStartValidating] = useState(false);
+
+
+
+  // Retrieving the device's dimensions
 
 
   // Stateful variable for controling the display of the date picker.
@@ -96,80 +90,58 @@ export default function WeightScreen() {
 
       <View style={{flexGrow: 1}}>
         {/*diagram goes here, in the view below*/}
-        <View style={styles.diagramStyle}>
+        <View style={styles.upperHalf}>
           <Text text60L>
               [Diagram]
           </Text>
         </View>
 
-        <View style={styles.bottomThingyStyle}>
-          
-          {/* Text and number input (check if correct) */}
-          <Text text60 white> 
-            Add new weight:
-          </Text>
+        <View style={{    
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexGrow: 1,}}>
+          <View style={styles.greenRectangle}>
 
-          <View style={{
-            alignItems: 'center',
-            flexDirection: 'row',
-            padding: 10,
-            }}>
-
-            <View width={24} height={24} style={{ marginBottom: 2, marginHorizontal: 5}}>
-                <GaugeIcon />
-              </View>
-
-            <NumberInput
-              initialNumber={weightMeasure}
-              onChangeNumber={(numberInput) => {
-                const number = numberInput.number;
-                setWeightMeasure(number);
-                const validity = number > 0;
-                setMeasureValidity(validity);
-              }}
-              containerStyle={[
-                tweakStyles(styles.iconFields, {
+            <View style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              gap: 15,
+              }}>
+              <NumberInput
+                initialNumber={weightMeasure}
+                onChangeNumber={(numberInput) => {
+                  const number = numberInput.number;
+                  setWeightMeasure(number);
+                  const validity = number > 0;
+                  setMeasureValidity(validity);
+                }}
+                containerStyle={tweakStyles(styles.iconFields, {
                   borderColor:
                     startValidating && !measureValidity
                       ? Colors.green30
                       : Colors.grey60,
-                }),
-                { width: 120 }  // Set specific width here
-              ]}
-            />
-            {/* A little separator  */}
-            <View style={{ marginHorizontal: 10 }} />
-
-            {/* Field that changes the currently selected measurement unit */}
-            
-              <View width={24} height={24} style={{ marginBottom: 2 }}>
-                <RulerVerticalIcon />
+                })}
+              />
+              {/* Field that changes the currently selected measurement unit */}
+              <View>
+                <Picker
+                  value={"unit"}
+                  onChange={(element) => {
+                    setUnit(element);
+                  }}
+                  style={styles.iconFields}
+                >
+                </Picker>
               </View>
-              <Picker
-                value={"unit"}
-                onChange={(element) => {
-                  setUnit(element);
-                }}
-                style={[
-                  styles.iconFields,
-                  { width: 120 }  // Set specific width here
-                ]}
-              >
-              </Picker>
-
-            {/* A little separator  */}
-            <View style={{ marginHorizontal: 10 }} />      
-
+            </View>
             <Button
             backgroundColor={Colors.green70}
-            style={{ padding: 9 }}
+            style={{ padding: 9}}
             iconSource={() => (
-              <PlusIcon
-                style={{ width: 20, height: 20 }}
-                color={Colors.green10}
-              />
+              <Text text60L>
+                Weight!
+              </Text>
             )}
-            round
             onPress={() => {
               navigator.navigate("List", {
                 mealId: meal.id,
@@ -177,9 +149,8 @@ export default function WeightScreen() {
               });
             }}
           />
-
+                     
           </View>
-          
         </View>
       </View>
     </>
@@ -188,24 +159,23 @@ export default function WeightScreen() {
 
 
 const styles = StyleSheet.create({
-  diagramStyle:{
-    position: 'absolute',
-    top: 50,
-    width: screenWidth,
-    height: 300,
-    backgroundColor: Colors.white,
-    alignItems: 'center',
+  upperHalf:{
+    flexGrow: 1, 
     justifyContent: 'center',
+    alignItems: "center",
+    backgroundColor: 'white',
   },
-  bottomThingyStyle: {
-    position: 'absolute',
-    bottom: 50,
-    width: screenWidth,
-    height: 110,
-    backgroundColor: Colors.green40,
+  bottomHalf: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10
+  },
+  greenRectangle: {
+    backgroundColor: Colors.green30,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    gap:10
   },
   iconFields: {
     flexDirection: "column",
